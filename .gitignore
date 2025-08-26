@@ -1,0 +1,36 @@
+# ROS2 Build artifacts
+build/
+install/
+log/
+*.pyc
+__pycache__/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.orig
+
+# Log files
+*.log
+
+# Dependencies
+devel/
+
+# External VRX packages (not our work) - ADD THE ACTUAL PACKAGE NAMES YOU SAW
+vrx/
+vrx_gazebo/
+wamv_description/
+wamv_gazebo/
+wave_simulator/
+robotx_gazebo/
+# Add any other VRX package names you found
