@@ -1,0 +1,16 @@
+# Goal - what we want to achieve
+float64 sampling_duration    # Duration in seconds to sample particles
+float64 detection_radius     # Detection radius around robot (optional, uses default if 0.0)
+---
+# Result - what we return when done
+bool success                 # Whether sampling completed successfully
+string message              # Status message
+int32 total_detections      # Total number of particles detected
+int32 unique_particles      # Number of unique particles detected
+float64 actual_duration     # Actual sampling duration
+particle_sim/DetectedParticle[] particles  # List of all detected particles
+---
+# Feedback - periodic updates during execution
+float64 elapsed_time        # Time elapsed since sampling started
+int32 current_detections    # Current number of detections so far
+float64 progress           # Progress percentage (0.0 to 1.0)
