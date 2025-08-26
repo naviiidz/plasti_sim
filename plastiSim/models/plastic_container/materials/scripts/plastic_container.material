@@ -1,0 +1,26 @@
+material PlasticContainer
+{
+    technique
+    {
+        pass
+        {
+            ambient 0.8 0.9 1.0 1.0
+            diffuse 0.9 0.95 1.0 0.8
+            specular 0.2 0.2 0.2 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+            
+            texture_unit
+            {
+                texture texture/plastic.jpg
+                tex_coord_set 0
+            }
+            
+            texture_unit
+            {
+                texture plastic_normal.png
+                tex_coord_set 0
+                colour_op_ex add_signed
+            }
+        }
+    }
+}

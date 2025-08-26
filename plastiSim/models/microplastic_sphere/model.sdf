@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="microplastic_sphere">
+    <!-- Critical settings -->
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+    <pose>0 0 0.0025 0 0 0</pose>  <!-- Start at ground level (radius height) -->
+
+    <link name="particle">
+      <!-- Visual -->
+      <visual name="visual">
+        <geometry>
+          <sphere><radius>0.25</radius></sphere>  <!-- 5mm diameter -->
+        </geometry>
+        <material>
+          <ambient>0.8 0.1 0.1 0.9</ambient>
+          <diffuse>0.8 0.1 0.1 0.9</diffuse>
+        </material>
+      </visual>
+
+      <!-- Collision -->
+      <collision name="collision">
+        <geometry>
+          <sphere><radius>0.0025</radius></sphere>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.0001</min_depth>  <!-- Critical for small objects -->
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.01</mu>  <!-- Low friction -->
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <!-- Physics - balanced for surface floating -->
+      <inertial>
+        <mass>0.001</mass>  <!-- 1mg - balanced mass for floating -->
+        <inertia>
+          <ixx>1e-8</ixx>
+          <iyy>1e-8</iyy>
+          <izz>1e-8</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+  <!-- VRX Buoyancy Plugin -->
+    <plugin name="vrx::PolyhedraBuoyancyDrag"
+            filename="libPolyhedraBuoyancyDrag.so">
+      <!-- Fluid properties -->
+      <fluid_density>1025.0</fluid_density>  <!-- Seawater density kg/m³ -->
+      <fluid_level>0.0</fluid_level>          <!-- Water surface level -->
+      
+      <!-- Drag coefficients - reduced for small particles -->
+      <linear_drag>0.7</linear_drag>         <!-- Lower drag coefficient -->
+      <angular_drag>0.1</angular_drag>        <!-- Lower angular drag -->
+      
+      <!-- Buoyancy object definition -->
+      <buoyancy name="microplastic_buoyancy">
+        <link_name>particle</link_name>
+        <pose>0 0 0.0 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>             <!-- Larger buoyancy volume for floating -->
+          </sphere>
+        </geometry>
+      </buoyancy>
+      
+      <!-- Wave field integration -->
+      <wavefield>
+        <topic>/vrx/wavefield/parameters</topic>
+      </wavefield>
+    </plugin>
+
+  </model>
+</sdf>

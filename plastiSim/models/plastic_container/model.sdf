@@ -1,0 +1,94 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="plastic_container">
+    <!-- Static model, can be affected by physics -->
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+    
+    <link name="link">
+    <pose>0 0 0.0 3.14 3.14 0.0</pose> <!-- Center at half height -->
+      <gravity>true</gravity> <!-- Gravity enabled - buoyancy plugin counteracts it when submerged -->
+      <inertial>
+        <mass>0.5</mass>
+        <inertia>
+          <ixx>0.5</ixx> <ixy>0</ixy> <ixz>0</ixz>
+          <iyy>0.5</iyy> <iyz>0</iyz>
+          <izz>0.01</izz>
+        </inertia>
+      </inertial>
+      
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://plastic_container/plastic_container.dae</uri>
+            <scale>2 2 2</scale> <!-- Scale factor for collision mesh -->
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.6</mu>
+              <mu2>0.6</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://plastic_container/plastic_container.dae</uri>
+            <scale>2 2 2</scale> <!-- Scale factor for collision mesh -->
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>PlasticContainer</name>
+            <uri>model://plastic_container/materials/scripts/plastic_container.material</uri>
+          </script>
+          <ambient>0.8 0.9 1.0 1.0</ambient>  <!-- Light blue-white ambient -->
+          <diffuse>0.9 0.95 1.0 0.8</diffuse>  <!-- Semi-transparent plastic -->
+          <specular>0.2 0.2 0.2 1.0</specular>  <!-- Subtle shine -->
+          <emissive>0.0 0.0 0.0 1.0</emissive>
+        </material>
+      </visual>
+      
+      <!-- Add velocity decay for more realistic floating behavior -->
+      <velocity_decay>
+        <linear>0.05</linear>
+        <angular>0.05</angular>
+      </velocity_decay>
+    </link>
+
+    <!-- VRX Buoyancy Plugin -->
+    <plugin name="vrx::PolyhedraBuoyancyDrag"
+            filename="libPolyhedraBuoyancyDrag.so">
+      <!-- Fluid properties -->
+      <fluid_density>1025.0</fluid_density>  <!-- Seawater density kg/m³ -->
+      <fluid_level>0.0</fluid_level>          <!-- Water surface level -->
+      
+      <!-- Drag coefficients -->
+      <linear_drag>15.0</linear_drag>         <!-- Slightly higher drag for container shape -->
+      <angular_drag>10.2</angular_drag>        <!-- Angular drag coefficient -->
+      
+      <!-- Buoyancy object definition -->
+      <buoyancy name="container_buoyancy">
+        <link_name>link</link_name>
+    <pose>0 0 0.0 3.14 3.14 0.0</pose> <!-- Center at half height -->
+            <!-- Relative to link origin -->
+        <geometry>
+          <!-- Approximate container as box for buoyancy calculations -->
+          <box>
+            <size>0.12 0.08 0.15</size>       <!-- Approximate plastic container dimensions -->
+          </box>
+        </geometry>
+      </buoyancy>
+      
+      <!-- Wave field integration -->
+      <wavefield>
+        <topic>/vrx/wavefield/parameters</topic>
+      </wavefield>
+    </plugin>
+    
+  </model>
+</sdf>

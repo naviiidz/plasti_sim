@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="coke_can">
+    <static>false</static>
+    
+    <link name="link">
+      <pose>0 0 0 1.57 0 0</pose>
+      
+      <inertial>
+        <!-- Aluminum can: empty can ~15g, making it light enough to float -->
+        <mass>0.150</mass>
+        <inertia>
+          <!-- Cylinder inertia: I_xx = I_yy = (1/12)*m*(3*r^2 + h^2), I_zz = (1/2)*m*r^2 -->
+          <!-- Assuming radius ~0.032m, height ~0.12m for coke can -->
+          <ixx>0.0019</ixx>
+          <iyy>0.0019</iyy>
+          <izz>0.00077</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://can_coke/coke_can.dae</uri>
+            <scale>2 2 2</scale>
+          </mesh>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>0.8</mu>
+              <mu2>0.8</mu2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <kp>1000000</kp>
+              <kd>1</kd>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+      
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://can_coke/coke_can.dae</uri>
+            <scale>2 2 2</scale>
+          </mesh>
+        </geometry>
+
+        <cast_shadows>true</cast_shadows>
+      </visual>
+    </link>
+
+
+    <!-- VRX Buoyancy Plugin -->
+    <plugin name="vrx::PolyhedraBuoyancyDrag"
+            filename="libPolyhedraBuoyancyDrag.so">
+      <!-- Fluid properties -->
+      <fluid_density>1025.0</fluid_density>  <!-- Seawater density kg/m³ -->
+      <fluid_level>0.0</fluid_level>          <!-- Water surface level -->
+      
+      <!-- Drag coefficients -->
+      <linear_drag>10.0</linear_drag>         <!-- Linear drag coefficient -->
+      <angular_drag>5.0</angular_drag>        <!-- Angular drag coefficient -->
+      
+      <!-- Buoyancy object definition -->
+      <buoyancy name="can_buoyancy">
+        <link_name>link</link_name>
+        <pose>0 0 0.0 0 0 0</pose> <!-- Center at can center -->
+        <geometry>
+          <cylinder>
+            <radius>0.032</radius>             <!-- Coke can radius -->
+            <length>0.12</length>              <!-- Coke can height -->
+          </cylinder>
+        </geometry>
+      </buoyancy>
+      
+      <!-- Wave field integration -->
+      <wavefield>
+        <topic>/vrx/wavefield/parameters</topic>
+      </wavefield>
+    </plugin>
+  </model>
+</sdf>

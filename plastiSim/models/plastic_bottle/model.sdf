@@ -1,0 +1,89 @@
+<?xml version="1.0" ?>
+<sdf version="1.7">
+  <model name="plastic_bottle">
+    <!-- Static model, can be affected by physics -->
+    <static>false</static>
+    <allow_auto_disable>false</allow_auto_disable>
+    
+    <!-- Main bottle body -->
+    <link name="bottle_body">
+      <pose>0 0 0.0 -0.0 1.57 0</pose> <!-- Center at half height -->
+      <gravity>true</gravity> <!-- Gravity enabled - buoyancy plugin counteracts it when submerged -->
+      
+      <!-- Collision geometry - simplified cylinder -->
+      <collision name="bottle_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.032</radius> <!-- ~64mm diameter bottle -->
+            <length>0.25</length>  <!-- 250mm height -->
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0.8</mu>  <!-- Higher friction for plastic -->
+              <mu2>0.8</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <!-- Visual appearance - use mesh if available -->
+      <visual name="bottle_visual">
+        <geometry>
+          <mesh>
+            <uri>model://plastic_bottle/plastic_bottle.dae</uri>
+            <scale>2 2 2</scale> <!-- Convert mm to m for realistic size -->
+          </mesh>
+        </geometry>
+
+      </visual>
+
+      <!-- Inertial properties for a typical empty PET bottle -->
+      <inertial>
+        <mass>0.5</mass> <!-- 40g empty PET bottle -->
+      </inertial>
+      
+      <!-- Add velocity decay for more realistic floating behavior -->
+      <velocity_decay>
+        <linear>0.00001</linear>
+        <angular>0.00001</angular>
+      </velocity_decay>
+    </link>
+
+    <!-- VRX Buoyancy Plugin -->
+    <plugin name="vrx::PolyhedraBuoyancyDrag"
+            filename="libPolyhedraBuoyancyDrag.so">
+      <!-- Fluid properties -->
+      <fluid_density>1025.0</fluid_density>  <!-- Seawater density kg/m³ -->
+      <fluid_level>0.0</fluid_level>          <!-- Water surface level -->
+      
+      <!-- Drag coefficients -->
+      <linear_drag>2.0</linear_drag>         <!-- Linear drag coefficient -->
+      <angular_drag>1.0</angular_drag>        <!-- Angular drag coefficient -->
+      
+      <!-- Buoyancy object definition -->
+      <buoyancy name="bottle_buoyancy">
+        <link_name>bottle_body</link_name>
+      <pose>0 0 0.0 0 0 0</pose> <!-- Center at half height -->
+        <geometry>
+          <cylinder>
+            <radius>0.032</radius>             <!-- Same as collision geometry -->
+            <length>0.40</length>              <!-- Same as collision geometry -->
+          </cylinder>
+        </geometry>
+      </buoyancy>
+      
+      <!-- Wave field integration -->
+      <wavefield>
+        <topic>/vrx/wavefield/parameters</topic>
+      </wavefield>
+    </plugin>
+
+  </model>
+</sdf>

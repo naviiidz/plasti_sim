@@ -1,0 +1,269 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="diff_drive_robot">
+    <!-- Main body (small, just for reference) -->
+    <link name="robot_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>5</mass> <!-- Reduced mass for floating -->
+        <inertia>
+          <ixx>3</ixx>
+          <iyy>0.658</iyy>
+          <izz>1.25</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.5</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.5</radius>
+            <length>0.2</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.1 0.8 0.1 1</ambient>
+          <diffuse>0.1 0.8 0.1 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Left Floater (pontoon) -->
+    <link name="left_floater">
+      <pose>-0.5 0.0 -0.3 1.57 0 0</pose>
+      <inertial>
+        <mass>15</mass>
+        <inertia>
+          <ixx>3</ixx>  <!-- For rotation around length axis -->
+          <iyy>0.33</iyy>  <!-- For vertical rotation -->
+          <izz>0.625</izz> 
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.8 1</ambient>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.3</linear>
+        <angular>0.3</angular>
+      </velocity_decay>
+    </link>
+
+    <!-- Right Floater (pontoon) -->
+    <link name="right_floater">
+      <pose>0.5 0 -0.3 1.57 0 0</pose>
+      <inertial>
+        <mass>15</mass>
+        <inertia>
+          <ixx>3</ixx>  <!-- For rotation around length axis -->
+          <iyy>0.33</iyy>  <!-- For vertical rotation -->
+          <izz>0.625</izz> 
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.8 1</ambient>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.3</linear>
+        <angular>0.3</angular>
+      </velocity_decay>
+    </link>
+
+  <plugin name="custom_buoyancy" filename="librobot_buoyancy_wave.so">
+    <liquid_density>997.0</liquid_density>
+    <link name="left_floater">
+      <volume>0.4</volume>
+      <radius>0.25</radius>
+      <cyl_height>2.0</cyl_height>
+    </link>
+    <link name="right_floater">
+      <volume>0.4</volume>
+      <radius>0.25</radius>
+      <cyl_height>2.0</cyl_height>
+    </link>
+  </plugin>
+
+    <!-- Left Wheel (motor) at end of left floater -->
+    <link name="left_wheel">
+      <pose>-0.5 1.0 -0.3 1.57 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+        <inertia>
+          <ixx>0.00000018</ixx>
+          <iyy>0.00000018</iyy>
+          <izz>0.00000032</izz>
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.08 0.05</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0.1 0.1 1</ambient>
+          <diffuse>0.8 0.1 0.1 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Right Wheel (motor) at end of right floater -->
+    <link name="right_wheel">
+      <pose>0.5 1.0 -0.3 1.57 0 0</pose>
+      <inertial>
+        <mass>0.0001</mass>
+      <inertia>
+        <ixx>0.00000018</ixx>
+        <iyy>0.00000018</iyy>
+        <izz>0.00000032</izz>
+      </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.05</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.08 0.05</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.8 0.1 0.1 1</ambient>
+          <diffuse>0.8 0.1 0.1 1</diffuse>
+          <specular>0.2 0.2 0.2 1</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Joints -->
+    <joint name="left_floater_joint" type="fixed">
+      <parent>robot_link</parent>
+      <child>left_floater</child>
+    </joint>
+    <joint name="right_floater_joint" type="fixed">
+      <parent>robot_link</parent>
+      <child>right_floater</child>
+    </joint>
+    <joint name="left_wheel_joint" type="revolute">
+      <parent>left_floater</parent>
+      <child>left_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1000</lower>
+          <upper>1000</upper>
+        </limit>
+      </axis>
+      <velocity_decay>
+        <linear>0.3</linear>
+        <angular>0.3</angular>
+      </velocity_decay>
+    </joint>
+    <joint name="right_wheel_joint" type="revolute">
+      <parent>right_floater</parent>
+      <child>right_wheel</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1000</lower>
+          <upper>1000</upper>
+        </limit>
+      </axis>
+      <velocity_decay>
+        <linear>0.3</linear>
+        <angular>0.3</angular>
+      </velocity_decay>
+    </joint>
+
+
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+        <ros>
+          <namespace>/diff_drive_robot</namespace>
+        </ros>
+        <!-- wheel info -->
+        <left_joint>left_wheel_joint</left_joint>
+        <right_joint>right_wheel_joint</right_joint>
+        <wheel_separation>0.38</wheel_separation>
+        <wheel_diameter>0.1</wheel_diameter>
+
+        <!-- Limits -->
+        <max_wheel_torque>200</max_wheel_torque>
+        <max_wheel_acceleration>10.0</max_wheel_acceleration>
+
+        <!-- Output -->
+        <odometry_frame>odom</odometry_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+
+        <publish_odom>true</publish_odom>
+        <publish_odom_tf>true</publish_odom_tf>
+        <publish_wheel_tf>true</publish_wheel_tf>
+    </plugin>
+
+    <!-- Thrust plugin for thrusters -->
+
+
+  <plugin name="thrust_plugin" filename="libthrust_plugin.so">
+    <left_wheel_joint>left_wheel_joint</left_wheel_joint>
+    <right_wheel_joint>right_wheel_joint</right_wheel_joint>
+    <thrust_gain>1000.0</thrust_gain>
+    <topic>/diff_drive_robot/thruster_cmd</topic>
+    <update_rate>50</update_rate>
+    <max_thrust>100</max_thrust>
+    <min_thrust>-100</min_thrust>
+  </plugin>
+
+  </model>
+</sdf>

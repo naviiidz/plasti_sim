@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# But not these files/folders:
+!.gitignore
+!CMakeLists.txt
+!*.cpp
+!*.cc
+!*.h
+!build/
+
+# Ignore everything inside build, but keep the folder
+build/*
+!.gitignore

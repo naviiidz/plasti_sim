@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<sdf version="1.7">
+  <model name="marker_sphere">
+    <pose>0 0 0 0 0 0</pose>
+    <static>true</static>
+    <link name="link">
+      <visual name="visual">
+        <geometry>
+          <sphere>
+            <radius>0.5</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>1.0 0.2 0.2 1.0</ambient>
+          <diffuse>1.0 0.2 0.2 1.0</diffuse>
+          <specular>0.8 0.8 0.8 1.0</specular>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

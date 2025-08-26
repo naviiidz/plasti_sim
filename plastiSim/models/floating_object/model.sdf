@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="floating_cylinder">
+    <static>false</static>
+    <link name="cylinder">
+      <!-- Place the cylinder just below the water surface, horizontal (roll=1.57) -->
+      <pose>0 0 -0.1 1.57 0 0</pose>
+      <inertial>
+        <mass>5</mass>
+        <inertia>
+          <ixx>3.33</ixx>  <!-- For rotation around length axis -->
+          <iyy>0.33</iyy>  <!-- For vertical rotation -->
+          <izz>0.625</izz> 
+        </inertia>
+      </inertial>
+      <collision name="collision">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <cylinder>
+            <radius>0.25</radius>
+            <length>2.0</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.2 0.2 0.8 1</ambient>
+        </material>
+      </visual>
+      <velocity_decay>
+        <linear>0.6</linear>
+        <angular>0.6</angular>
+      </velocity_decay>
+    </link>
+
+    <!-- Custom buoyancy plugin for the cylinder -->
+    <plugin name="custom_buoyancy" filename="librobot_buoyancy_wave.so">
+      <fluid_density>997.0</fluid_density>
+      <surface_z>0.0</surface_z>
+              <volume>0.80</volume> <!-- pi*0.25^2*2.0, slightly increased for floating -->
+
+      <link name="cylinder">
+        <center_of_buoyancy>0 0 0</center_of_buoyancy>
+        <cyl_height>2.0</cyl_height>
+        <damping>500.0</damping>
+      </link>
+    </plugin>
+  </model>
+</sdf>
